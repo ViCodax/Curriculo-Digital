@@ -49,7 +49,7 @@ const translations = {
     "exp3-b2": "Acompanhamento de metas e indicadores via Power BI.",
     "exp3-b3": "Criação de projetos em PowerPoint e Excel para otimizar o dia a dia.",
     "exp4-badge": "Início da Jornada",
-    "exp4-date": "mar 2019 — nov 2019 · 9 meses",
+    "exp4-date": "03/2019 — 11/2019",
     "exp4-role": "Assistente Técnico",
     "exp4-loc": "· São Paulo e Região, Brasil · No local",
     "exp4-b1": "Gerenciamento de desktops dos funcionários, com limpeza, manutenção preventiva, formatação, montagem e desmontagem de equipamentos.",
@@ -128,7 +128,7 @@ const translations = {
     "exp3-b2": "Tracking of goals and KPIs via Power BI.",
     "exp3-b3": "Creation of PowerPoint and Excel projects to streamline daily operations.",
     "exp4-badge": "Where It All Began",
-    "exp4-date": "Mar 2019 — Nov 2019 · 9 months",
+    "exp4-date": "03/2019 — 11/2019",
     "exp4-role": "Technical Assistant",
     "exp4-loc": "· São Paulo Region, Brazil · On-site",
     "exp4-b1": "Management of employees' desktops, including cleaning, preventive maintenance, formatting, assembly and disassembly of equipment.",
@@ -200,7 +200,23 @@ function applyTranslations(lang){
   });
 
   restartTypewriter();
+  updateTimelineLine();
 }
+
+function updateTimelineLine(){
+  const timeline = document.querySelector('.timeline');
+  const currentDot = timeline?.querySelector('.timeline-item:last-child .timeline-dot');
+  if(!timeline || !currentDot) return;
+
+  const timelineTop = timeline.getBoundingClientRect().top;
+  const dot = currentDot.getBoundingClientRect();
+  const lineStart = 6;
+  const lineHeight = dot.top - timelineTop - lineStart + 4;
+
+  timeline.style.setProperty('--timeline-line-height', `${Math.max(0, lineHeight)}px`);
+}
+
+window.addEventListener('resize', updateTimelineLine);
 
 const langToggle = document.getElementById('langToggle');
 langToggle.addEventListener('click', () => {
