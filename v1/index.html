@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vinicius Correia | Currículo Digital</title>
+<link rel="icon" type="image/png" href="assets/vc_icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-decor"></div>
+
+<!-- ===== NAV ===== -->
+<nav id="navbar">
+  <div class="nav-logo">VC<span>.</span></div>
+  <ul class="nav-links">
+    <li><a href="#sobre" class="nav-link active" data-i18n="nav-sobre">Sobre</a></li>
+    <li><a href="#projetos" class="nav-link" data-i18n="nav-projetos">Projetos</a></li>
+    <li><a href="#experiencia" class="nav-link" data-i18n="nav-experiencia">Experiência</a></li>
+    <li><a href="#skills" class="nav-link" data-i18n="nav-skills">Skills</a></li>
+    <li><a href="#formacao" class="nav-link" data-i18n="nav-formacao">Formação</a></li>
+    <li><a href="#contato" class="nav-link" data-i18n="nav-contato">Contato</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button id="langToggle" title="Switch language / Mudar idioma" aria-label="Switch language">
+      <span class="lang-option active" data-lang="pt">BR</span><span class="lang-sep">|</span><span class="lang-option" data-lang="en">EN</span>
+    </button>
+    <button id="themeToggle" title="Alternar tema" aria-label="Alternar tema">🌙</button>
+    <a id="downloadCV" href="assets/Vinicius-Correia-CV.pdf" download="Vinicius-Correia-CV.pdf" title="Baixar CV em PDF"><span data-i18n="nav-pdf">⬇ PDF</span></a>
+  </div>
+  <button id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header id="sobre" class="hero">
+  <div class="hero-content reveal">
+    <p class="hero-kicker" data-i18n="hero-kicker">Olá, eu sou</p>
+    <h1 class="hero-name">Vinicius Correia <span class="dot">Dantas da Silva</span></h1>
+    <h2 class="hero-role">
+      <span id="typed"></span><span class="cursor">|</span>
+    </h2>
+    <p class="hero-summary" data-i18n-html="hero-summary">
+      Transformo processos manuais de TI em soluções escaláveis de automação. Criador da
+      <strong>Workplace Automation Platform (WAP)</strong> e da
+      <strong>Central de Termos Workplace</strong> — unindo suporte corporativo, automação e IA
+      para reduzir esforço operacional e elevar a experiência dos usuários.
+    </p>
+    <div class="hero-tags">
+      <span>PowerShell</span><span>SCCM</span><span>Copilot Studio</span><span>Power BI</span><span>Automação</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#projetos" class="btn btn-primary" data-i18n="hero-btn1">Ver Projetos</a>
+      <a href="#contato" class="btn btn-outline" data-i18n="hero-btn2">Contato</a>
+    </div>
+  </div>
+
+  <div class="hero-visual reveal">
+    <div class="orbit-card">
+      <div class="avatar-ring">
+        <div class="avatar">
+          <img src="assets/foto-vinicius.jpg" alt="Vinicius Correia">
+        </div>
+      </div>
+      <div class="stat-badge stat-1"><strong>60%</strong><span data-i18n="stat-1">ganho de eficiência</span></div>
+      <div class="stat-badge stat-2"><strong>3+</strong><span data-i18n="stat-2">plataformas criadas</span></div>
+      <div class="stat-badge stat-3"><strong>EN</strong><span data-i18n="stat-3">projeto internacional</span></div>
+    </div>
+  </div>
+  <a href="#projetos" class="scroll-down" aria-label="Rolar para baixo">↓</a>
+</header>
+
+<main>
+
+<!-- ===== PROJETOS ===== -->
+<section id="projetos" class="section">
+  <p class="section-kicker reveal" data-i18n="projetos-kicker">Destaques</p>
+  <h2 class="section-title reveal" data-i18n="projetos-title">Projetos que Lidero</h2>
+  <div class="cards-grid">
+
+    <a class="project-card reveal" href="https://github.com/ViCodax/Workplace-Automation-Platform" target="_blank" rel="noopener noreferrer" aria-label="Ver o repositório do Workplace Automation Platform no GitHub">
+      <div class="project-icon icon-blue">⚙️</div>
+      <h3><span data-i18n="proj1-title">Workplace Automation Platform</span> <span class="badge">WAP</span></h3>
+      <p data-i18n="proj1-text">Plataforma corporativa de autosserviço que automatiza a resolução de incidentes,
+      instalação de aplicações e execução de procedimentos técnicos, reduzindo a dependência
+      de intervenção manual da equipe de suporte. Implantada em toda a empresa via SCCM, com
+      telemetria integrada a dashboards de Power BI.</p>
+      <div class="project-tags">
+        <span>PowerShell</span><span>SCCM</span><span>Power BI</span><span>Self-Service</span>
+      </div>
+    </a>
+
+    <a class="project-card reveal" href="https://github.com/ViCodax/Central-de-Termos---Workplace" target="_blank" rel="noopener noreferrer" aria-label="Ver o repositório da Central de Termos Workplace no GitHub">
+      <div class="project-icon icon-purple">🤖</div>
+      <h3><span data-i18n="proj2-title">Central de Termos Workplace</span></h3>
+      <p data-i18n="proj2-text">Agente de IA construído com Microsoft Copilot Studio que automatiza a geração de
+      documentos internos — como Termos de Entrega e Devolução de Equipamentos — a partir da
+      busca automática de dados corporativos, eliminando preenchimento manual e retrabalho.</p>
+      <div class="project-tags">
+        <span>Copilot Studio</span><span data-i18n="proj2-tag">Automação de Documentos</span><span>IA</span><span data-i18n="proj2-tag2">Prompt Engineering</span>
+      </div>
+    </a>
+
+    <article class="project-card reveal">
+      <div class="project-icon icon-teal">🌎</div>
+      <h3><span data-i18n="proj3-title">Automação de Deploy Internacional</span></h3>
+      <p data-i18n="proj3-text">Ponto focal no Brasil em iniciativa internacional de automação de deploy de desktops
+      utilizando IVANTI, em conjunto com equipes dos Estados Unidos e México — automatizando
+      o processo completo de formatação e entrega de máquinas.</p>
+      <div class="project-tags">
+        <span>IVANTI</span><span data-i18n="proj3-tag">Automação de Deploy</span><span data-i18n="proj3-tag2">Colaboração Global</span>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ===== EXPERIÊNCIA ===== -->
+<section id="experiencia" class="section alt">
+  <p class="section-kicker reveal" data-i18n="exp-kicker">Trajetória</p>
+  <h2 class="section-title reveal" data-i18n="exp-title">Experiência Profissional</h2>
+
+  <div class="timeline">
+
+    <div class="timeline-final reveal">
+      <div class="timeline-dot dot-final">🌱</div>
+      <span class="timeline-final-label" data-i18n="timeline-final-label">Onde tudo começou</span>
+    </div>
+
+    <div class="timeline-item reveal timeline-origin">
+      <div class="timeline-dot dot-origin"></div>
+      <div class="timeline-content">
+        <span class="timeline-date">
+          <span class="origin-badge" data-i18n="exp4-badge">Início da Jornada</span>
+          <span data-i18n="exp4-date">03/2019 — 11/2019</span>
+        </span>
+        <h3 data-i18n="exp4-role">Assistente Técnico</h3>
+        <h4>Flex Som - Luz - Imagem</h4>
+        <ul>
+          <li data-i18n="exp4-b1">Gerenciamento de desktops dos funcionários, com limpeza, manutenção preventiva, formatação, montagem e desmontagem de equipamentos.</li>
+          <li data-i18n="exp4-b2">Instalação e configuração de sistemas operacionais e aplicativos essenciais ao funcionamento dos dispositivos.</li>
+          <li data-i18n="exp4-b3">Cabeamento estruturado e configuração de redes, incluindo crimpagem de cabos RJ45.</li>
+          <li data-i18n="exp4-b4">Preparação e manutenção de notebooks para eventos, garantindo funcionamento e dados sempre disponíveis.</li>
+          <li data-i18n="exp4-b5">Atuação no helpdesk, oferecendo suporte técnico direto para continuidade das operações da empresa.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <span class="timeline-date" data-i18n="exp3-date">11/2022 — 02/2024</span>
+        <h3 data-i18n="exp3-role">Supervisor Operacional</h3>
+        <h4>Raia Drogasil S.A</h4>
+        <ul>
+          <li data-i18n="exp3-b1">Supervisão de equipe e atribuição de atividades operacionais.</li>
+          <li data-i18n="exp3-b2">Acompanhamento de metas e indicadores via Power BI.</li>
+          <li data-i18n="exp3-b3">Criação de projetos em PowerPoint e Excel para otimizar o dia a dia.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <span class="timeline-date" data-i18n="exp2-date">12/2024 — 12/2025</span>
+        <h3 data-i18n="exp2-role">Técnico de Suporte</h3>
+        <h4>SONDA IT</h4>
+        <ul>
+          <li data-i18n="exp2-b1">Manutenção preventiva e corretiva em impressoras Ricoh modelo 8000+.</li>
+          <li data-i18n="exp2-b2">Liderança na implementação e migração tecnológica para impressoras a tinta Epson.</li>
+          <li data-i18n="exp2-b3">Gestão de indicadores operacionais, custos de suprimentos e reposição.</li>
+          <li data-i18n="exp2-b4">Liderança direta de equipe de operadores e controle de jornada.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <span class="timeline-date" data-i18n="exp1-date">01/2026 — atual</span>
+        <h3 data-i18n="exp1-role">Analista de Suporte N2</h3>
+        <h4>Positivo S+</h4>
+        <ul>
+          <li data-i18n="exp1-b1">Atendimento técnico presencial para resolução de incidentes em hardware e software.</li>
+          <li data-i18n="exp1-b2">Desenvolvimento de soluções de automação para suporte corporativo (WAP e Central de Termos).</li>
+          <li data-i18n="exp1-b3">Suporte a sistemas operacionais Windows e aplicações corporativas.</li>
+          <li data-i18n="exp1-b4">Gerenciamento de chamados dentro de SLA e apoio em deploy/padronização de equipamentos.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== SKILLS ===== -->
+<section id="skills" class="section">
+  <p class="section-kicker reveal" data-i18n="skills-kicker">Competências</p>
+  <h2 class="section-title reveal" data-i18n="skills-title">Skills &amp; Ferramentas</h2>
+
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <div class="skill-top"><span>PowerShell</span><span>60%</span></div>
+      <div class="skill-bar"><div class="skill-fill" data-width="60"></div></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-top"><span>SCCM</span><span>50%</span></div>
+      <div class="skill-bar"><div class="skill-fill" data-width="50"></div></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-top"><span>Copilot Studio</span><span>80%</span></div>
+      <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-top"><span>Power BI</span><span>30%</span></div>
+      <div class="skill-bar"><div class="skill-fill" data-width="30"></div></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-top"><span>Python</span><span>60%</span></div>
+      <div class="skill-bar"><div class="skill-fill" data-width="60"></div></div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-top"><span data-i18n="skill-suporte">Suporte Corporativo</span><span>100%</span></div>
+      <div class="skill-bar"><div class="skill-fill" data-width="100"></div></div>
+    </div>
+  </div>
+
+  <div class="pill-row reveal">
+    <span class="pill pill-featured" data-i18n="pill-automacao">Automação de Processos</span>
+    <span class="pill pill-featured" data-i18n="pill-prompt">Prompt Engineering</span>
+    <span class="pill" data-i18n="pill-troubleshoot">Troubleshooting Avançado</span>
+    <span class="pill">Windows Enterprise</span>
+    <span class="pill" data-i18n="pill-itsm">Gestão de Serviços de TI</span>
+    <span class="pill" data-i18n="pill-lideranca">Liderança de Equipes</span>
+    <span class="pill" data-i18n="pill-ingles">Inglês Avançado</span>
+  </div>
+</section>
+
+<!-- ===== FORMAÇÃO ===== -->
+<section id="formacao" class="section alt">
+  <p class="section-kicker reveal" data-i18n="edu-kicker">Bagagem</p>
+  <h2 class="section-title reveal" data-i18n="edu-title">Formação &amp; Idiomas</h2>
+
+  <div class="edu-grid">
+    <div class="edu-card reveal">
+      <div class="edu-icon">🎓</div>
+      <h3 data-i18n="edu1-title">Tecnólogo em Gestão de Tecnologia da Informação</h3>
+      <p data-i18n="edu1-text">Cruzeiro do Sul Virtual — em andamento (previsão 2028)</p>
+    </div>
+    <div class="edu-card reveal">
+      <div class="edu-icon">🎓</div>
+      <h3 data-i18n="edu2-title">Técnico em Informática</h3>
+      <p data-i18n="edu2-text">ETEC Albert Einstein — concluído em 2019</p>
+    </div>
+    <div class="edu-card reveal">
+      <div class="edu-icon">🌐</div>
+      <h3 data-i18n="edu3-title">Inglês Avançado</h3>
+      <p data-i18n="edu3-text">Utilização prática em ambiente corporativo e em projeto internacional.</p>
+    </div>
+    <div class="edu-card reveal">
+      <div class="edu-icon">📘</div>
+      <h3 data-i18n="edu4-title">Cursos Complementares</h3>
+      <p data-i18n="edu4-text">Power BI na Prática (2025) • Python na Prática (2024) • Soft Skills (2021)</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTATO ===== -->
+<footer id="contato" class="section contact-section">
+  <p class="section-kicker reveal" data-i18n="contact-kicker">Vamos conversar</p>
+  <h2 class="section-title reveal" data-i18n="contact-title">Contato</h2>
+  <div class="contact-grid reveal">
+    <a href="mailto:vdasilva2309@gmail.com" class="contact-card">
+      <span class="contact-icon">✉️</span>
+      <span>vdasilva2309@gmail.com</span>
+    </a>
+    <a href="https://wa.me/qr/OP5LTOPJ5HQYN1" target="_blank" rel="noopener noreferrer" class="contact-card" title="Chamar no WhatsApp">
+      <span class="contact-icon">📱</span>
+      <span>(11) 97749-3523</span>
+    </a>
+    <a href="https://www.linkedin.com/in/viniciuscdantas" target="_blank" rel="noopener noreferrer" class="contact-card">
+      <span class="contact-icon">in</span>
+      <span>linkedin.com/in/viniciuscdantas</span>
+    </a>
+    <a href="https://github.com/ViCodax" target="_blank" rel="noopener noreferrer" class="contact-card">
+      <span class="contact-icon" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M12 2C6.48 2 2 6.58 2 12.24c0 4.52 2.87 8.35 6.84 9.7.5.1.68-.22.68-.49 0-.24-.01-1.04-.01-1.89-2.78.62-3.37-1.2-3.37-1.2-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.35 1.12 2.92.86.09-.67.35-1.12.64-1.38-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.18 9.18 0 0 1 12 6.99c.85 0 1.71.12 2.51.36 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.49A10.25 10.25 0 0 0 22 12.24C22 6.58 17.52 2 12 2Z"/>
+        </svg>
+      </span>
+      <span>github.com/ViCodax</span>
+    </a>
+    <span class="contact-card no-link">
+      <span class="contact-icon">📍</span>
+      <span data-i18n="contact-location">São Domingos, São Paulo — SP</span>
+    </span>
+  </div>
+  <p class="footer-note" data-i18n-html="footer-note">© <span id="year"></span> Vinicius Correia Dantas da Silva — Currículo Digital</p>
+</footer>
+
+</main>
+
+<button id="backToTop" aria-label="Voltar ao topo">↑</button>
+
+<script src="script.js"></script>
+</body>
+</html>

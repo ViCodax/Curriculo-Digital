@@ -1,0 +1,43 @@
+<!-- EXPERIMENTO: mapa interativo de hard e soft skills -->
+<!-- Bloco preservado para futura lapidacao; nao esta conectado ao index.html. -->
+<section class="section" id="skills-experiment">
+  <div class="shell">
+    <div class="sec-head" data-reveal>
+      <p class="sec-index">04</p>
+      <div>
+        <div class="vc-eyebrow">Competencias</div>
+        <h2 class="sec-title">Skills &amp; Ferramentas</h2>
+      </div>
+    </div>
+
+    <div class="skills-switcher" role="tablist" aria-label="Tipo de competencia">
+      <button class="skills-switcher__tab active" type="button" role="tab" aria-selected="true" data-skill-mode="hard">Hard skills</button>
+      <button class="skills-switcher__tab" type="button" role="tab" aria-selected="false" data-skill-mode="soft">Soft skills</button>
+    </div>
+
+    <div class="skills-layout">
+      <div class="skills-column skills-column--left" id="skillsLeft"></div>
+
+      <div class="skills-radar">
+        <div class="skills-radar__head">
+          <span>perfil tecnico</span>
+          <span class="skills-radar__scale">0 — 100</span>
+        </div>
+        <svg class="skills-radar__chart" viewBox="0 0 420 420" role="img" aria-label="Grafico radar de competencias"></svg>
+        <div class="skills-detail" aria-live="polite">
+          <span class="skills-detail__eyebrow">area selecionada</span>
+          <strong class="skills-detail__title"></strong>
+          <p class="skills-detail__text"></p>
+        </div>
+      </div>
+
+      <div class="skills-column skills-column--right" id="skillsRight"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Dados preservados no script.js:
+     SKILL_PROFILES.pt.hard / SKILL_PROFILES.pt.soft
+     SKILL_PROFILES.en.hard / SKILL_PROFILES.en.soft
+     Funcoes: renderSkillProfile, updateSkillDetail e renderSkillsRadar.
+-->
