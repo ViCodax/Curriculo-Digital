@@ -56,33 +56,123 @@
       ],
     },
 
-    /* Ranking por ferramenta — value = nº de execuções */
+    /* Horas poupadas por 100 execuções, derivadas do benchmark de ROI. */
     tools: {
       pt: [
-        { name: "Reparo Teams",              value: 8.33,  color: "blue"   },
-        { name: "Reparo Rápido (Windows)",   value: 33.33, color: "blue"   },
-        { name: "Reparo SAP",                value: 8.33,  color: "blue"   },
-        { name: "Reparo de Impressoras",     value: 16.67, color: "blue"   },
-        { name: "Reparo Avançado (Windows)", value: 66.67, color: "orange" },
-        { name: "Instalador DBeaver",        value: 41.67, color: "green"  },
-        { name: "Instalador Docker",         value: 83.33, color: "green"  },
-        { name: "Instalador Git Bash",       value: 8.33,  color: "green"  },
-        { name: "Instalador Claude CLI",     value: 16.67, color: "green"  },
+        { id: "teams", name: "Reparo Teams", hoursSavedPer100: 8.33, color: "blue" },
+        { id: "windows-quick", name: "Reparo Rápido (Windows)", hoursSavedPer100: 33.33, color: "blue" },
+        { id: "sap", name: "Reparo SAP", hoursSavedPer100: 8.33, color: "blue" },
+        { id: "printers", name: "Reparo de Impressoras", hoursSavedPer100: 16.67, color: "blue" },
+        { id: "windows-advanced", name: "Reparo Avançado (Windows)", hoursSavedPer100: 66.67, color: "orange" },
+        { id: "dbeaver", name: "Instalador DBeaver", hoursSavedPer100: 41.67, color: "green" },
+        { id: "docker", name: "Instalador Docker", hoursSavedPer100: 83.33, color: "green" },
+        { id: "git-bash", name: "Instalador Git Bash", hoursSavedPer100: 8.33, color: "green" },
+        { id: "claude-cli", name: "Instalador Claude CLI", hoursSavedPer100: 16.67, color: "green" },
       ],
       en: [
-        { name: "Teams Repair",             value: 8.33,  color: "blue"   },
-        { name: "Windows QuickFix",         value: 33.33, color: "blue"   },
-        { name: "SAP Repair",               value: 8.33,  color: "blue"   },
-        { name: "Printer Repair",           value: 16.67, color: "blue"   },
-        { name: "Windows Advanced Repair",  value: 66.67, color: "orange" },
-        { name: "DBeaver Installer",        value: 41.67, color: "green"  },
-        { name: "Docker Installer",         value: 83.33, color: "green"  },
-        { name: "Git Bash Installer",       value: 8.33,  color: "green"  },
-        { name: "Claude CLI Installer",     value: 16.67, color: "green"  },
+        { id: "teams", name: "Teams Repair", hoursSavedPer100: 8.33, color: "blue" },
+        { id: "windows-quick", name: "Windows QuickFix", hoursSavedPer100: 33.33, color: "blue" },
+        { id: "sap", name: "SAP Repair", hoursSavedPer100: 8.33, color: "blue" },
+        { id: "printers", name: "Printer Repair", hoursSavedPer100: 16.67, color: "blue" },
+        { id: "windows-advanced", name: "Windows Advanced Repair", hoursSavedPer100: 66.67, color: "orange" },
+        { id: "dbeaver", name: "DBeaver Installer", hoursSavedPer100: 41.67, color: "green" },
+        { id: "docker", name: "Docker Installer", hoursSavedPer100: 83.33, color: "green" },
+        { id: "git-bash", name: "Git Bash Installer", hoursSavedPer100: 8.33, color: "green" },
+        { id: "claude-cli", name: "Claude CLI Installer", hoursSavedPer100: 16.67, color: "green" },
       ],
     },
 
-    feedSpeed: 2200,
+    feedSpeed: 2000,
+  };
+
+  const MAX_TOOL_RUNS = 100;
+  const sessionRuns = Object.fromEntries(CONFIG.tools.pt.map((tool) => [tool.id, 0]));
+  const sessionFeedRecords = [];
+
+  const SKILLS = {
+    pt: {
+      hard: [
+        { name: "Workplace", axis: "Workplace", value: 95, description: "Suporte técnico e operação de ambientes corporativos." },
+        { name: "PowerShell", axis: "PowerShell", value: 82, description: "Automação, manutenção e diagnóstico de ambientes Windows." },
+        { name: "Python", axis: "Python", value: 80, description: "Automação de tarefas, integração de soluções e processamento de dados." },
+        { name: "Windows / Infra", axis: "Windows / Infra", value: 82, description: "Administração e troubleshooting de ambientes Windows." },
+        { name: "Automação de Processos", axis: "Automação", value: 80, description: "Criação de soluções para reduzir tarefas manuais e recorrentes.", featured: true },
+        { name: "SCCM", axis: "SCCM", value: 68, description: "Gestão e distribuição de software em ambientes corporativos." },
+        { name: "Microsoft 365", axis: "Microsoft 365", value: 70, description: "Suporte e administração de soluções Microsoft 365." },
+        { name: "Prompt Engineering", axis: "Prompt Engineering", value: 75, description: "Criação de agentes e soluções de IA para processos corporativos." },
+      ],
+      soft: [
+        { name: "Resolução de Problemas", axis: "Resolução de Problemas", value: 90, description: "Análise de problemas e busca por soluções práticas." },
+        { name: "Proatividade", axis: "Proatividade", value: 90, description: "Identificação de oportunidades antes que se tornem problemas." },
+        { name: "Melhoria Contínua", axis: "Melhoria Contínua", value: 90, description: "Busca constante por eficiência e evolução dos processos.", featured: true },
+        { name: "Visão de Processos", axis: "Processos", value: 85, description: "Análise de fluxos para identificar melhorias e automações." },
+        { name: "Autonomia", axis: "Autonomia", value: 85, description: "Capacidade de conduzir atividades com independência." },
+        { name: "Comunicação", axis: "Comunicação", value: 80, description: "Comunicação clara com usuários, equipes e stakeholders." },
+        { name: "Colaboração", axis: "Colaboração", value: 85, description: "Trabalho conjunto para alcançar soluções e resultados." },
+      ],
+    },
+    en: {
+      hard: [
+        { name: "Workplace", axis: "Workplace", value: 95, description: "Technical support and operation of corporate environments." },
+        { name: "PowerShell", axis: "PowerShell", value: 82, description: "Automation, maintenance and diagnostics for Windows environments." },
+        { name: "Python", axis: "Python", value: 80, description: "Task automation, solution integration and data processing." },
+        { name: "Windows / Infra", axis: "Windows / Infra", value: 82, description: "Administration and troubleshooting of Windows environments." },
+        { name: "Process Automation", axis: "Automation", value: 80, description: "Solutions that reduce recurring manual tasks.", featured: true },
+        { name: "SCCM", axis: "SCCM", value: 68, description: "Software management and distribution in corporate environments." },
+        { name: "Microsoft 365", axis: "Microsoft 365", value: 70, description: "Support and administration of Microsoft 365 solutions." },
+        { name: "Prompt Engineering", axis: "Prompt Engineering", value: 75, description: "Agents and AI solutions for corporate processes." },
+      ],
+      soft: [
+        { name: "Problem Solving", axis: "Problem Solving", value: 90, description: "Analyzing problems and finding practical solutions." },
+        { name: "Proactivity", axis: "Proactivity", value: 90, description: "Identifying opportunities before they become problems." },
+        { name: "Continuous Improvement", axis: "Continuous Improvement", value: 90, description: "Ongoing pursuit of efficiency and process improvement.", featured: true },
+        { name: "Process Thinking", axis: "Processes", value: 85, description: "Analyzing workflows to find improvements and automation opportunities." },
+        { name: "Autonomy", axis: "Autonomy", value: 85, description: "Ability to carry out work independently." },
+        { name: "Communication", axis: "Communication", value: 80, description: "Clear communication with users, teams and stakeholders." },
+        { name: "Collaboration", axis: "Collaboration", value: 85, description: "Working together to achieve solutions and results." },
+      ],
+    },
+  };
+
+  const PROJECT_INDICATORS = {
+    pt: {
+      terms: {
+        note: "Estimativa baseada em casos reais. A geração de termos também pode ser feita em lote.",
+        metrics: [
+          { value: "~15 min", label: "Poupados por termo", foot: "média aproximada" },
+          { value: "~25 h", label: "Poupadas em 100 termos", foot: "1.500 minutos estimados" },
+          { value: "0", label: "Erros de preenchimento", foot: "dados obtidos automaticamente" },
+          { value: "Em uso", label: "Time de Workplace", foot: "ferramenta em operação" },
+        ],
+      },
+      deploy: {
+        note: "Redução calculada a partir dos tempos relatados. Sem acesso atual à telemetria do ambiente.",
+        metrics: [
+          { value: "90 → 40 min", label: "Tempo de setup", foot: "~50 min poupados por equipamento" },
+          { value: "~56%", label: "Menos tempo", foot: "comparado ao setup anterior" },
+          { value: "1 campo", label: "Intervenção manual", foot: "serial usado como hostname" },
+        ],
+      },
+    },
+    en: {
+      terms: {
+        note: "Estimate based on real cases. Terms can also be generated in batches.",
+        metrics: [
+          { value: "~15 min", label: "Saved per term", foot: "approximate average" },
+          { value: "~25 h", label: "Saved per 100 terms", foot: "estimated 1,500 minutes" },
+          { value: "0", label: "Filling errors", foot: "data retrieved automatically" },
+          { value: "In use", label: "Workplace team", foot: "tool in operation" },
+        ],
+      },
+      deploy: {
+        note: "Reduction calculated from reported times. Current access to environment telemetry is unavailable.",
+        metrics: [
+          { value: "90 → 40 min", label: "Setup time", foot: "~50 min saved per device" },
+          { value: "~56%", label: "Less time", foot: "versus previous setup" },
+          { value: "1 field", label: "Manual input", foot: "serial number as hostname" },
+        ],
+      },
+    },
   };
 
   /* ===================================================================
@@ -103,7 +193,12 @@
       "automation-step3": "integrar ferramentas",
       "automation-step4": "testar e otimizar",
       "automation-step5": "documentar e melhorar",
-      "automation-live": "processo ao vivo",
+      "automation-live": "etapa selecionada",
+      "automation-detail1": "Defina o resultado esperado e os critérios de sucesso.",
+      "automation-detail2": "Mapeie o fluxo atual e identifique pontos de atrito.",
+      "automation-detail3": "Conecte ferramentas e dados ao processo.",
+      "automation-detail4": "Valide cenários e ajuste a solução.",
+      "automation-detail5": "Documente a entrega e identifique a próxima melhoria.",
       "automation-panel-note": "esforço manual convertido em lógica escalável",
       "chip-1": "Analista de Workplace N2",
       "chip-2": "Automação de Processos",
@@ -114,11 +209,29 @@
 
       "tele-eyebrow": "telemetria · workplace automation platform",
       "tele-title": "Automação que se mede.",
-      "tele-sub": "Cada execução das ferramentas gera log e telemetria estruturada. Esses dados alimentam um dashboard em Power BI e permitem priorizar as próximas entregas com dado, não com achismo.",
-      "tele-card1": "horas economizadas por 100 execuções",
-      "tele-card2": "stream de execuções",
+      "tele-sub": "O feed simula execuções nesta visita. Cada evento atualiza o contador e o tempo poupado com base no ROI por ferramenta.",
+      "tele-card1": "execuções simuladas por ferramenta · limite 100",
+      "tele-card2": "stream simulado da sessão",
       "legend-b": "reparo", "legend-o": "avançado", "legend-g": "instalador",
-      "tele-note": "// benchmark fixo · 100 execuções por ferramenta · valores derivados do CSV de ROI",
+      "tele-note": "// simulação local · reinicia ao recarregar · minutos estimados a partir do benchmark de ROI",
+      "tele-session-runs": "execuções na sessão",
+      "tele-session-runs-foot": "de até 900 · limite 100 por ferramenta",
+      "tele-session-time": "tempo poupado",
+      "tele-session-time-foot": "estimativa acumulada nesta visita",
+      "tele-session-tools": "ferramentas acionadas",
+      "tele-session-tools-foot": "com ao menos uma execução",
+      "tele-session-cap": "limite por ferramenta",
+      "tele-session-cap-foot": "cada contador para em 100",
+      "tele-bar-saved": "min poupados nesta sessão",
+      "tele-feed-ready": "simulação pronta · aguardando a primeira execução",
+      "tele-feed-tag": "[OK]",
+      "tele-controls": "Controles da simulação",
+      "tele-restart": "Reiniciar simulação",
+      "tele-pause": "Pausar simulação",
+      "tele-play": "Retomar simulação",
+      "tele-speed-fast": "Acelerar para 1 segundo",
+      "tele-speed-normal": "Voltar para 2 segundos",
+      "tele-complete": "Completar todas as métricas",
 
       "projetos-kicker": "Destaques",
       "projetos-title": "Projetos",
@@ -130,6 +243,10 @@
       "proj3-title": "Automação de Deploy Internacional",
       "proj3-text": "Ponto focal no Brasil em iniciativa internacional de automação de deploy de desktops utilizando IVANTI, em conjunto com equipes dos Estados Unidos e México — automatizando o processo completo de formatação e entrega de máquinas.",
       "proj3-tag": "Automação de Deploy", "proj3-tag2": "Colaboração Global",
+      "project-open": "Ver métricas",
+      "project-dialog-kicker": "case · métricas",
+      "project-dialog-close": "Fechar detalhes do projeto",
+      "project-dialog-repo": "Ver no GitHub",
 
       "exp-kicker": "Trajetória", "exp-title": "Experiência Profissional",
       "exp1-date": "01/2026 — atual", "exp1-now": "em curso", "exp1-role": "Analista de Suporte N2",
@@ -157,6 +274,7 @@
       "skills-kicker": "Competências", "skills-title": "Skills & Ferramentas",
       "skills-radar-label": "perfil técnico",
       "skills-radar-aria": "Gráfico radar de competências",
+      "skills-note": "// índices ilustrativos · não são avaliações formais nem resultados comprovados",
       "skill-suporte": "Suporte Corporativo",
       "pill-automacao": "Automação de Processos", "pill-prompt": "Prompt Engineering",
       "pill-troubleshoot": "Troubleshooting Avançado", "pill-itsm": "Gestão de Serviços de TI",
@@ -193,7 +311,12 @@
       "automation-step3": "integrate tools",
       "automation-step4": "test and optimize",
       "automation-step5": "document and improve",
-      "automation-live": "live process",
+      "automation-live": "selected stage",
+      "automation-detail1": "Define the expected outcome and success criteria.",
+      "automation-detail2": "Map the current workflow and identify friction points.",
+      "automation-detail3": "Connect tools and data to the process.",
+      "automation-detail4": "Validate scenarios and refine the solution.",
+      "automation-detail5": "Document the delivery and identify the next improvement.",
       "automation-panel-note": "manual effort converted into scalable logic",
       "chip-1": "L2 Workplace Analyst",
       "chip-2": "Process Automation",
@@ -204,11 +327,29 @@
 
       "tele-eyebrow": "telemetry · workplace automation platform",
       "tele-title": "Automation you can measure.",
-      "tele-sub": "Every tool execution generates structured logs and telemetry. That data feeds a Power BI dashboard and makes it possible to prioritise the next deliveries with evidence, not guesswork.",
-      "tele-card1": "hours saved per 100 executions",
-      "tele-card2": "execution stream",
+      "tele-sub": "The feed simulates executions during this visit. Each event updates the counter and saved time using the ROI benchmark for that tool.",
+      "tele-card1": "simulated runs per tool · limit 100",
+      "tele-card2": "session simulation stream",
       "legend-b": "repair", "legend-o": "advanced", "legend-g": "installer",
-      "tele-note": "// fixed benchmark · 100 executions per tool · values derived from the ROI CSV",
+      "tele-note": "// local simulation · resets on reload · minutes estimated from the ROI benchmark",
+      "tele-session-runs": "session executions",
+      "tele-session-runs-foot": "up to 900 · limit 100 per tool",
+      "tele-session-time": "time saved",
+      "tele-session-time-foot": "estimated total for this visit",
+      "tele-session-tools": "tools used",
+      "tele-session-tools-foot": "with at least one execution",
+      "tele-session-cap": "limit per tool",
+      "tele-session-cap-foot": "each counter stops at 100",
+      "tele-bar-saved": "min saved this visit",
+      "tele-feed-ready": "simulation ready · waiting for first execution",
+      "tele-feed-tag": "[OK]",
+      "tele-controls": "Simulation controls",
+      "tele-restart": "Restart simulation",
+      "tele-pause": "Pause simulation",
+      "tele-play": "Resume simulation",
+      "tele-speed-fast": "Speed up to 1 second",
+      "tele-speed-normal": "Return to 2 seconds",
+      "tele-complete": "Complete all metrics",
 
       "projetos-kicker": "Highlights",
       "projetos-title": "Projects",
@@ -220,6 +361,10 @@
       "proj3-title": "International Deploy Automation",
       "proj3-text": "Focal point in Brazil for an international desktop deployment automation initiative using IVANTI, working alongside teams from the United States and Mexico — automating the entire machine formatting and delivery process.",
       "proj3-tag": "Deploy Automation", "proj3-tag2": "Global Collaboration",
+      "project-open": "View metrics",
+      "project-dialog-kicker": "case · metrics",
+      "project-dialog-close": "Close project details",
+      "project-dialog-repo": "View on GitHub",
 
       "exp-kicker": "Journey", "exp-title": "Professional Experience",
       "exp1-date": "01/2026 — present", "exp1-now": "ongoing", "exp1-role": "L2 Support Analyst",
@@ -247,6 +392,7 @@
       "skills-kicker": "Competencies", "skills-title": "Skills & Tools",
       "skills-radar-label": "technical profile",
       "skills-radar-aria": "Skills radar chart",
+      "skills-note": "// illustrative scores · not formal assessments or verified results",
       "skill-suporte": "Corporate Support",
       "pill-automacao": "Process Automation", "pill-prompt": "Prompt Engineering",
       "pill-troubleshoot": "Advanced Troubleshooting", "pill-itsm": "IT Service Management",
@@ -280,7 +426,11 @@
 
   let lang = localStorage.getItem("vc-lang") || "pt";
   let feedTimer = null;
+  let isFeedPaused = false;
+  let feedIntervalMs = CONFIG.feedSpeed;
   let automationTimer = null;
+  let skillMode = "hard";
+  let skillObserver = null;
 
   /* ===================================================================
      1. BOOT
@@ -330,7 +480,7 @@
     rebuildPanel();
     initAutomationPanel();
     rebuildTelemetry();
-    renderSkillsRadar();
+    if (skillObserver) renderSkillProfile();
   }
 
   /* ===================================================================
@@ -397,16 +547,22 @@
   function typeLoop(el, lines) {
     if (!el || !lines.length) return;
     el.innerHTML = "";
+    const hero = el.closest(".vc-hero");
     const txt = document.createElement("span");
     const caret = document.createElement("span");
     caret.className = "vc-hero__caret";
     el.append(txt, caret);
-    if (reduced) { txt.textContent = lines[0]; return; }
+    if (reduced) {
+      txt.textContent = lines[0];
+      hero?.classList.toggle("is-automating", lines[0].toLowerCase().includes("automate"));
+      return;
+    }
 
     let li = 0, ci = 0, del = false;
     (function tick() {
       const full = lines[li];
       txt.textContent = full.slice(0, ci);
+      hero?.classList.toggle("is-automating", !del && ci === full.length && full.toLowerCase().includes("automate"));
       let wait = del ? 28 : 45 + Math.random() * 45;
       if (!del && ci === full.length) { wait = 2100; del = true; }
       else if (del && ci === 0) { del = false; li = (li + 1) % lines.length; wait = 400; }
@@ -427,28 +583,29 @@
     const steps = $$("[data-flow-step]"), event = $("#automationEvent"), timer = $("#automationTime"), line = $(".vc-hero__workflow-line i");
     if (!steps.length) return;
     clearInterval(automationTimer);
-    const events = lang === "pt"
-      ? ["objetivo definido", "processo mapeado", "ferramentas conectadas", "teste em execucao", "melhoria registrada"]
-      : ["objective defined", "process mapped", "tools connected", "test in progress", "improvement logged"];
-    let current = 0, started = performance.now();
-    const update = () => {
-      const isReset = current === 0 && steps.some((step) => step.classList.contains("is-done"));
+    let current = Number(steps.find((step) => step.classList.contains("is-active"))?.dataset.flowStep || 0);
+    const selectStep = (selectedIndex) => {
+      const isReset = selectedIndex === 0 && current !== 0;
+      current = selectedIndex;
       if (isReset && line) line.classList.add("is-resetting");
       steps.forEach((step, index) => {
         step.classList.toggle("is-active", index === current);
         step.classList.toggle("is-done", index < current);
+        step.setAttribute("aria-pressed", String(index === current));
       });
       if (line) {
         line.style.left = (current / (steps.length - 1)) * 100 + "%";
         if (isReset) requestAnimationFrame(() => line.classList.remove("is-resetting"));
       }
-      if (event) event.textContent = events[current];
-      if (timer) timer.textContent = ((performance.now() - started) / 1000).toFixed(1) + "s";
-      current = (current + 1) % steps.length;
-      if (current === 0) started = performance.now();
+      if (event) event.textContent = I18N[lang][`automation-detail${current + 1}`];
+      if (timer) timer.textContent = `${String(current + 1).padStart(2, "0")} / ${String(steps.length).padStart(2, "0")}`;
     };
-    update();
-    automationTimer = setInterval(update, 1800);
+    steps.forEach((step) => {
+      if (step.dataset.interactive === "true") return;
+      step.dataset.interactive = "true";
+      step.addEventListener("click", () => selectStep(Number(step.dataset.flowStep)));
+    });
+    selectStep(current);
   }
 
   function parallax(hero) {
@@ -478,6 +635,13 @@
     maximumFractionDigits: digits,
   });
 
+  const minutesSavedFor = (tool) => sessionRuns[tool.id] * tool.hoursSavedPer100 * 60 / MAX_TOOL_RUNS;
+  const totalSessionMinutes = () => CONFIG.tools[lang].reduce((total, tool) => total + minutesSavedFor(tool), 0);
+  const formatMinutes = (minutes) => {
+    const rounded = Math.round(minutes * 10) / 10;
+    return fmt(rounded, Number.isInteger(rounded) ? 0 : 1);
+  };
+
   function countUp(el, target, dur, suffix) {
     suffix = suffix || "";
     const digits = Number.isInteger(target) ? 0 : 2;
@@ -492,10 +656,19 @@
 
   function renderKpis(wrap) {
     if (!wrap) return;
-    wrap.innerHTML = CONFIG.kpis[lang].map((k, i) => `
+    const tools = CONFIG.tools[lang];
+    const totalRuns = Object.values(sessionRuns).reduce((total, runs) => total + runs, 0);
+    const usedTools = tools.filter((tool) => sessionRuns[tool.id] > 0).length;
+    const kpis = [
+      { key: "runs", value: fmt(totalRuns), label: I18N[lang]["tele-session-runs"], foot: I18N[lang]["tele-session-runs-foot"], color: "blue" },
+      { key: "minutes", value: formatMinutes(totalSessionMinutes()), suffix: "min", label: I18N[lang]["tele-session-time"], foot: I18N[lang]["tele-session-time-foot"], color: "green" },
+      { key: "tools", value: `${usedTools}/${tools.length}`, label: I18N[lang]["tele-session-tools"], foot: I18N[lang]["tele-session-tools-foot"], color: "orange" },
+      { key: "cap", value: fmt(MAX_TOOL_RUNS), label: I18N[lang]["tele-session-cap"], foot: I18N[lang]["tele-session-cap-foot"], color: "blue" },
+    ];
+    wrap.innerHTML = kpis.map((k, i) => `
       <article class="vc-kpi" style="--i:${i};--c:${COLORS[k.color] || COLORS.blue}">
         <div class="vc-kpi__label">${k.label}</div>
-        <div class="vc-kpi__value"><span data-count="${k.value}">0</span>${
+        <div class="vc-kpi__value"><span data-session-kpi="${k.key}">${k.value}</span>${
           k.suffix ? `<span class="vc-kpi__suffix">${k.suffix}</span>` : ""
         }</div>
         <div class="vc-kpi__foot">${k.foot}</div>
@@ -505,48 +678,195 @@
   function renderBars(wrap) {
     if (!wrap) return;
     const tools = CONFIG.tools[lang];
-    const max = Math.max(...tools.map((t) => t.value), 1);
     wrap.innerHTML = tools.map((t, i) => `
-      <div class="vc-bar" style="--i:${i};--c:${COLORS[t.color] || COLORS.blue}">
+      <div class="vc-bar" data-tool-id="${t.id}" style="--i:${i};--c:${COLORS[t.color] || COLORS.blue}">
         <div class="vc-bar__top">
           <span class="vc-bar__name"><i class="vc-bar__tag"></i>${t.name}</span>
-          <span class="vc-bar__num" data-count="${t.value}">0</span>
+          <span class="vc-bar__num" data-run-count>0 / ${MAX_TOOL_RUNS}</span>
         </div>
-        <div class="vc-bar__track"><div class="vc-bar__fill" data-w="${Math.round((t.value / max) * 100)}"></div></div>
+        <div class="vc-bar__track"><div class="vc-bar__fill" data-run-fill></div></div>
+        <div class="vc-bar__saved" data-run-saved>0 ${I18N[lang]["tele-bar-saved"]}</div>
       </div>`).join("");
   }
 
-  function startFeed(el) {
-    if (!el || reduced) return;
-    clearInterval(feedTimer);
-    el.innerHTML = "";
-    const names = CONFIG.tools[lang].map((t) => t.name);
+  function renderFeed(el) {
+    if (!el) return;
+    el.replaceChildren();
+    if (!sessionFeedRecords.length) {
+      const empty = document.createElement("div");
+      empty.className = "vc-feed__empty";
+      empty.textContent = I18N[lang]["tele-feed-ready"];
+      el.appendChild(empty);
+      return;
+    }
+
     const depts = lang === "pt"
       ? ["Financeiro", "Dados", "Produtos", "Engenharia", "Operações", "Jurídico", "RH"]
       : ["Finance", "Data", "Products", "Engineering", "Operations", "Legal", "HR"];
-    const pick = (a) => a[Math.floor(Math.random() * a.length)];
-    function push() {
-      const ts = new Date().toTimeString().slice(0, 8);
+    sessionFeedRecords.forEach((record) => {
+      const tool = CONFIG.tools[lang].find((item) => item.id === record.toolId);
       const line = document.createElement("div");
       line.className = "vc-feed__line";
-      line.innerHTML = `<span class="vc-feed__ts">${ts}</span><span class="vc-feed__ok">[OK]</span><span class="vc-feed__tool">${pick(names)} · ${pick(depts)}</span>`;
-      el.prepend(line);
-      while (el.children.length > 14) el.lastElementChild.remove();
+      const time = document.createElement("span");
+      time.className = "vc-feed__ts";
+      time.textContent = record.time;
+      const status = document.createElement("span");
+      status.className = "vc-feed__ok";
+      status.textContent = I18N[lang]["tele-feed-tag"];
+      const description = document.createElement("span");
+      description.className = "vc-feed__tool";
+      description.textContent = record.completed
+        ? `${tool.name} · ${MAX_TOOL_RUNS}/${MAX_TOOL_RUNS}`
+        : `${tool.name} · ${depts[record.departmentIndex]}`;
+      line.append(time, status, description);
+      el.appendChild(line);
+    });
+  }
+
+  function updateSessionTelemetry() {
+    const tools = CONFIG.tools[lang];
+    const totalRuns = Object.values(sessionRuns).reduce((total, runs) => total + runs, 0);
+    const usedTools = tools.filter((tool) => sessionRuns[tool.id] > 0).length;
+    const totalRunsElement = $('[data-session-kpi="runs"]');
+    const totalMinutesElement = $('[data-session-kpi="minutes"]');
+    const usedToolsElement = $('[data-session-kpi="tools"]');
+    if (totalRunsElement) totalRunsElement.textContent = fmt(totalRuns);
+    if (totalMinutesElement) totalMinutesElement.textContent = formatMinutes(totalSessionMinutes());
+    if (usedToolsElement) usedToolsElement.textContent = `${usedTools}/${tools.length}`;
+
+    tools.forEach((tool) => {
+      const bar = $(`.vc-bar[data-tool-id="${tool.id}"]`);
+      if (!bar) return;
+      const runs = sessionRuns[tool.id];
+      $("[data-run-count]", bar).textContent = `${runs} / ${MAX_TOOL_RUNS}`;
+      $("[data-run-fill]", bar).style.width = `${runs}%`;
+      $("[data-run-saved]", bar).textContent = `${formatMinutes(minutesSavedFor(tool))} ${I18N[lang]["tele-bar-saved"]}`;
+    });
+    updateFeedControls();
+  }
+
+  function updateFeedControls() {
+    const hasCapacity = CONFIG.tools[lang].some((tool) => sessionRuns[tool.id] < MAX_TOOL_RUNS);
+    const running = Boolean(feedTimer);
+    const controls = {
+      restart: $("[data-feed-action='restart']"),
+      pause: $("[data-feed-action='pause']"),
+      play: $("[data-feed-action='play']"),
+      speed: $("[data-feed-action='speed']"),
+      complete: $("[data-feed-action='complete']"),
+    };
+    if (controls.pause) controls.pause.disabled = !running;
+    if (controls.play) controls.play.disabled = !isFeedPaused || !hasCapacity;
+    if (controls.speed) {
+      controls.speed.disabled = !hasCapacity;
+      controls.speed.setAttribute("aria-pressed", String(feedIntervalMs === 1000));
+      controls.speed.setAttribute("aria-label", I18N[lang][feedIntervalMs === 1000 ? "tele-speed-normal" : "tele-speed-fast"]);
+      controls.speed.title = I18N[lang][feedIntervalMs === 1000 ? "tele-speed-normal" : "tele-speed-fast"];
     }
-    for (let i = 0; i < 8; i++) push();
-    feedTimer = setInterval(push, CONFIG.feedSpeed);
+    if (controls.complete) controls.complete.disabled = !hasCapacity;
+    Object.entries(controls).forEach(([action, button]) => {
+      if (button && action !== "speed") {
+        button.title = I18N[lang][`tele-${action}`];
+        button.setAttribute("aria-label", I18N[lang][`tele-${action}`]);
+      }
+    });
+    const speedLabel = $("#teleSpeedLabel");
+    if (speedLabel) speedLabel.textContent = `${feedIntervalMs / 1000}s`;
+  }
+
+  function pushFeedRecord(el) {
+    const availableTools = CONFIG.tools[lang].filter((tool) => sessionRuns[tool.id] < MAX_TOOL_RUNS);
+    if (!availableTools.length) {
+      clearInterval(feedTimer);
+      feedTimer = null;
+      updateFeedControls();
+      return;
+    }
+
+    const departments = lang === "pt"
+      ? ["Financeiro", "Dados", "Produtos", "Engenharia", "Operações", "Jurídico", "RH"]
+      : ["Finance", "Data", "Products", "Engineering", "Operations", "Legal", "HR"];
+    const tool = availableTools[Math.floor(Math.random() * availableTools.length)];
+    sessionRuns[tool.id] += 1;
+    sessionFeedRecords.unshift({
+      time: new Date().toTimeString().slice(0, 8),
+      toolId: tool.id,
+      departmentIndex: Math.floor(Math.random() * departments.length),
+    });
+    if (sessionFeedRecords.length > 14) sessionFeedRecords.pop();
+    updateSessionTelemetry();
+    renderFeed(el);
+  }
+
+  function startFeed(el) {
+    if (!el) return;
+    clearInterval(feedTimer);
+    feedTimer = null;
+    renderFeed(el);
+    const hasCapacity = CONFIG.tools[lang].some((tool) => sessionRuns[tool.id] < MAX_TOOL_RUNS);
+    if (isFeedPaused || !hasCapacity) {
+      updateFeedControls();
+      return;
+    }
+    feedTimer = setInterval(() => pushFeedRecord(el), feedIntervalMs);
+    updateFeedControls();
+  }
+
+  function initTelemetryControls() {
+    const feed = $(".vc-feed");
+    const restart = $("[data-feed-action='restart']");
+    const pause = $("[data-feed-action='pause']");
+    const play = $("[data-feed-action='play']");
+    const speed = $("[data-feed-action='speed']");
+    const complete = $("[data-feed-action='complete']");
+    if (!feed || !restart || !pause || !play || !speed || !complete) return;
+
+    restart.addEventListener("click", () => {
+      clearInterval(feedTimer);
+      feedTimer = null;
+      Object.keys(sessionRuns).forEach((id) => { sessionRuns[id] = 0; });
+      sessionFeedRecords.length = 0;
+      isFeedPaused = false;
+      feedIntervalMs = CONFIG.feedSpeed;
+      updateSessionTelemetry();
+      renderFeed(feed);
+      startFeed(feed);
+    });
+    pause.addEventListener("click", () => {
+      isFeedPaused = true;
+      clearInterval(feedTimer);
+      feedTimer = null;
+      updateFeedControls();
+    });
+    play.addEventListener("click", () => {
+      isFeedPaused = false;
+      startFeed(feed);
+    });
+    speed.addEventListener("click", () => {
+      feedIntervalMs = feedIntervalMs === 2000 ? 1000 : 2000;
+      startFeed(feed);
+    });
+    complete.addEventListener("click", () => {
+      clearInterval(feedTimer);
+      feedTimer = null;
+      isFeedPaused = true;
+      sessionFeedRecords.length = 0;
+      const time = new Date().toTimeString().slice(0, 8);
+      CONFIG.tools[lang].forEach((tool) => {
+        sessionRuns[tool.id] = MAX_TOOL_RUNS;
+        sessionFeedRecords.push({ time, toolId: tool.id, departmentIndex: 0, completed: true });
+      });
+      updateSessionTelemetry();
+      renderFeed(feed);
+    });
+    updateFeedControls();
   }
 
   function fireTelemetry() {
     const tele = $(".vc-tele");
     if (!tele) return;
     tele.classList.add("is-live");
-    $$("[data-count]", tele).forEach((el, i) =>
-      setTimeout(() => countUp(el, +el.dataset.count, 1600), i * 80)
-    );
-    $$(".vc-bar__fill", tele).forEach((el) =>
-      requestAnimationFrame(() => (el.style.width = el.dataset.w + "%"))
-    );
+    updateSessionTelemetry();
     startFeed($(".vc-feed", tele));
   }
 
@@ -555,6 +875,7 @@
     if (!tele) return;
     renderKpis($(".vc-kpis", tele));
     renderBars($(".vc-bars", tele));
+    updateSessionTelemetry();
     if (tele.classList.contains("is-live")) fireTelemetry();
   }
 
@@ -574,8 +895,7 @@
   }
 
   function initSkills() {
-    renderSkillsRadar();
-    const io = new IntersectionObserver((entries) => {
+    skillObserver = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
         if (!e.isIntersecting) return;
         const card = e.target;
@@ -583,19 +903,96 @@
         const pct = $(".skill__pct", card);
         if (fill) fill.style.width = fill.dataset.width + "%";
         if (pct) countUp(pct, +pct.dataset.count, 1300, pct.dataset.suffix);
-        io.unobserve(card);
+        skillObserver.unobserve(card);
       });
     }, { threshold: 0.4 });
-    $$(".skill").forEach((el) => io.observe(el));
+    renderSkillProfile();
+    $$("[data-skill-mode]").forEach((button) => {
+      button.addEventListener("click", () => {
+        skillMode = button.dataset.skillMode;
+        renderSkillProfile();
+      });
+    });
   }
 
-  function renderSkillsRadar() {
+  function createSkillCard(skill, index) {
+    const card = document.createElement("div");
+    card.className = "skill";
+    if (skill.featured) card.classList.add("skill--featured");
+
+    const top = document.createElement("div");
+    top.className = "skill__top";
+    const label = document.createElement("div");
+    label.className = "skill__label";
+
+    const name = document.createElement("span");
+    name.className = "skill__name";
+    name.textContent = skill.name;
+
+    const star = document.createElement("span");
+    star.className = "skill__star";
+    star.setAttribute("aria-hidden", "true");
+    star.textContent = "★";
+
+    const info = document.createElement("button");
+    info.className = "skill__info";
+    info.type = "button";
+    info.innerHTML = '<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.25"/><path d="M10 9v4"/><circle class="skill__info-dot" cx="10" cy="6.25" r=".65"/></svg>';
+    info.setAttribute("aria-label", lang === "pt" ? `Sobre ${skill.name}` : `About ${skill.name}`);
+    info.setAttribute("aria-describedby", `skill-tooltip-${skillMode}-${index}`);
+
+    const tooltip = document.createElement("span");
+    tooltip.className = "skill__tooltip";
+    tooltip.id = `skill-tooltip-${skillMode}-${index}`;
+    tooltip.setAttribute("role", "tooltip");
+    tooltip.textContent = skill.description;
+
+    const value = document.createElement("span");
+    value.className = "skill__pct";
+    value.dataset.count = skill.value;
+    value.dataset.suffix = "%";
+    value.textContent = "0%";
+
+    const bar = document.createElement("div");
+    bar.className = "skill__bar";
+    const fill = document.createElement("i");
+    fill.dataset.width = skill.value;
+
+    label.append(name);
+    if (skill.featured) label.appendChild(star);
+    label.append(info, tooltip);
+    top.append(label, value);
+    bar.appendChild(fill);
+    card.append(top, bar);
+    return card;
+  }
+
+  function renderSkillProfile() {
+    const profile = SKILLS[lang][skillMode];
+    const left = $("#skillsLeft"), right = $("#skillsRight");
+    if (!left || !right) return;
+
+    left.replaceChildren(...profile.slice(0, 4).map(createSkillCard));
+    right.replaceChildren(...profile.slice(4).map((skill, index) => createSkillCard(skill, index + 4)));
+    $$("[data-skill-mode]").forEach((button) => {
+      const active = button.dataset.skillMode === skillMode;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+
+    renderSkillsRadar(profile);
+    if (skillObserver) {
+      skillObserver.disconnect();
+      $$(".skill").forEach((card) => skillObserver.observe(card));
+    }
+  }
+
+  function renderSkillsRadar(skills) {
     const chart = $(".skills-radar__chart");
-    const skills = $$(".skill");
     if (!chart || !skills.length) return;
 
     const NS = "http://www.w3.org/2000/svg";
-    const cx = 210, cy = 210, radius = 142;
+    const cx = 250, cy = 250, radius = 142;
     const angle = (index) => -Math.PI / 2 + (index * Math.PI * 2) / skills.length;
     const point = (index, value) => {
       const a = angle(index);
@@ -615,7 +1012,7 @@
     });
 
     skills.forEach((skill, index) => {
-      const label = $(".skill__top span:first-child", skill).textContent.trim();
+      const label = skill.axis;
       const a = angle(index);
       const endX = cx + Math.cos(a) * radius;
       const endY = cy + Math.sin(a) * radius;
@@ -623,12 +1020,24 @@
       const labelX = cx + Math.cos(a) * labelDistance;
       const labelY = cy + Math.sin(a) * labelDistance;
       chart.appendChild(make("line", { x1: cx, y1: cy, x2: endX, y2: endY, class: "radar__axis" }));
-      const text = make("text", { x: labelX, y: labelY, class: "radar__label", "text-anchor": Math.cos(a) > 0.25 ? "start" : Math.cos(a) < -0.25 ? "end" : "middle" });
-      text.textContent = label;
+      const lines = [];
+      label.split(" ").forEach((word) => {
+        const currentLine = lines[lines.length - 1];
+        if (!currentLine || `${currentLine} ${word}`.length > 12) lines.push(word);
+        else lines[lines.length - 1] += ` ${word}`;
+      });
+      const text = make("text", { x: labelX, y: labelY, class: skill.featured ? "radar__label radar__label--featured" : "radar__label", "text-anchor": Math.cos(a) > 0.25 ? "start" : Math.cos(a) < -0.25 ? "end" : "middle", "dominant-baseline": "middle", "aria-label": label });
+      const lineStep = 1.6;
+      lines.forEach((line, lineIndex) => {
+        const dy = lineIndex === 0 ? `${-((lines.length - 1) * lineStep / 2)}em` : `${lineStep}em`;
+        const tspan = make("tspan", { x: labelX, dy });
+        tspan.textContent = line;
+        text.appendChild(tspan);
+      });
       chart.appendChild(text);
     });
 
-    const values = skills.map((skill) => $(".skill__bar i", skill).dataset.width);
+    const values = skills.map((skill) => skill.value);
     const shape = make("polygon", { points: values.map((value, index) => point(index, value)).join(" "), class: "radar__shape" });
     chart.appendChild(shape);
     values.forEach((value, index) => {
@@ -644,6 +1053,92 @@
       entries.forEach((e) => { if (e.isIntersecting) { fireTelemetry(); io.disconnect(); } });
     }, { threshold: 0.2 });
     io.observe(tele);
+  }
+
+  function initProjectDetails() {
+    const dialog = $("#projectDialog");
+    if (!dialog) return;
+    const title = $("#projectDialogTitle", dialog);
+    const media = $("#projectDialogMedia", dialog);
+    const image = $("#projectDialogImage", dialog);
+    const metrics = $("#projectDialogMetrics", dialog);
+    const note = $("#projectDialogNote", dialog);
+    const repo = $("#projectDialogRepo", dialog);
+    let lastTrigger = null;
+
+    const renderMetric = (metric) => {
+      const item = document.createElement("article");
+      item.className = "project-dialog__metric";
+      const value = document.createElement("strong");
+      value.className = "project-dialog__value";
+      value.textContent = metric.value;
+      const label = document.createElement("span");
+      label.className = "project-dialog__metric-label";
+      label.textContent = metric.label;
+      const foot = document.createElement("span");
+      foot.className = "project-dialog__metric-foot";
+      foot.textContent = metric.foot;
+      item.append(value, label, foot);
+      return item;
+    };
+
+    const openProject = (card) => {
+        const trigger = $(".proj__details", card);
+        const projectId = trigger.dataset.projectId;
+        const projectIndicators = PROJECT_INDICATORS[lang][projectId];
+        const projectMetrics = projectId === "wap"
+          ? CONFIG.kpis[lang].map((metric) => ({
+            value: fmt(metric.value, Number.isInteger(metric.value) ? 0 : 2) + metric.suffix,
+            label: metric.label,
+            foot: metric.foot,
+          }))
+          : projectIndicators.metrics;
+
+        lastTrigger = trigger;
+        title.textContent = $("h3 [data-i18n]", card).textContent;
+        metrics.replaceChildren(...projectMetrics.map(renderMetric));
+        note.textContent = projectId === "wap"
+          ? (lang === "pt"
+            ? "Benchmark fixo de 100 execuções por ferramenta; os valores são estimativas de ROI, não telemetria ao vivo."
+            : "Fixed benchmark of 100 executions per tool; values are ROI estimates, not live telemetry.")
+          : projectIndicators.note;
+        media.hidden = projectId !== "wap";
+        image.alt = lang === "pt"
+          ? "Captura da Central de Software com ferramentas disponíveis para instalação."
+          : "Software Center screenshot showing tools available for installation.";
+
+        if (trigger.dataset.projectRepo) {
+          repo.href = trigger.dataset.projectRepo;
+          repo.hidden = false;
+        } else {
+          repo.removeAttribute("href");
+          repo.hidden = true;
+        }
+        dialog.showModal();
+    };
+
+    $$(".proj").forEach((card) => {
+      card.addEventListener("click", (event) => {
+        if (event.target.closest("a")) return;
+        openProject(card);
+      });
+    });
+
+    $("#projectDialogClose", dialog).addEventListener("click", () => dialog.close());
+    dialog.addEventListener("cancel", (event) => {
+      event.preventDefault();
+      dialog.close();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && dialog.open) {
+        event.preventDefault();
+        dialog.close();
+      }
+    });
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    dialog.addEventListener("close", () => lastTrigger?.focus());
   }
 
   function initTimelineRail() {
@@ -675,6 +1170,8 @@
         const r = s.getBoundingClientRect();
         if (r.top <= 140 && r.bottom >= 140) id = s.id;
       });
+      // a última seção pode nunca cruzar a linha de 140px se a página não rolar o suficiente
+      if (h > 0 && y >= h - 2) id = secs[secs.length - 1].id;
       links.forEach((l) => l.classList.toggle("active", l.getAttribute("href") === "#" + id));
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -746,8 +1243,8 @@
     $$("[data-magnetic]").forEach((el) => {
       el.addEventListener("mousemove", (e) => {
         const r = el.getBoundingClientRect();
-        const dx = (e.clientX - (r.left + r.width / 2)) * 0.25;
-        const dy = (e.clientY - (r.top + r.height / 2)) * 0.25;
+        const dx = (e.clientX - (r.left + r.width / 2)) * 0.08;
+        const dy = (e.clientY - (r.top + r.height / 2)) * 0.08;
         el.style.transform = `translate(${dx}px, ${dy}px)`;
       });
       el.addEventListener("mouseleave", () => (el.style.transform = ""));
@@ -776,7 +1273,7 @@
   function init() {
     applyLang(lang);
     initTheme(); initLang(); initNav();
-    initReveal(); initSkills(); initTelemetryTrigger(); initTimelineRail();
+    initReveal(); initSkills(); initTelemetryTrigger(); initTelemetryControls(); initProjectDetails(); initTimelineRail();
     initCursor(); initMagnetic(); initTilt();
 
     const hero = $(".vc-hero");
