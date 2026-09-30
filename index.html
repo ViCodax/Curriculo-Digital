@@ -106,37 +106,42 @@
     </div>
 
     <aside class="vc-hero__panel">
-      <div class="vc-hero__panelhead"><span class="vc-dot"></span><span data-i18n="automation-panel-title">automation engine // online</span></div>
+      <div class="vc-hero__panelhead">
+        <div class="vc-hero__paneltitle"><span>WAP</span><span class="vc-hero__panel-slash">/</span><span id="automationPanelTitle">AUTOMATION CONSOLE</span></div>
+        <div class="vc-hero__status"><span class="vc-dot vc-dot--small"></span><span data-i18n="automation-online">ONLINE</span></div>
+      </div>
+      <div class="vc-hero__console">
+        <p class="vc-hero__console-command"><span>$</span><span id="automationCommand" data-i18n="automation-command1">process --analyze</span></p>
+        <p><span>→</span><span id="automationOutput1" data-i18n="automation-output1-1">identificando tarefas repetitivas...</span></p>
+        <p><span>→</span><span id="automationOutput2" data-i18n="automation-output2-1">mapeando o processo atual...</span></p>
+        <p class="vc-hero__console-result"><span>✓</span><strong id="automationEvent">fluxo analisado</strong><i aria-hidden="true"></i></p>
+      </div>
+      <div class="vc-hero__flowhead"><span data-i18n="automation-flow-title">FLUXO DE AUTOMAÇÃO</span><span id="automationTime">01 / 03</span></div>
       <div class="vc-hero__flow">
-        <div class="vc-hero__workflow-line" aria-hidden="true"><i></i></div>
         <button class="vc-hero__flowstep" type="button" data-flow-step="0" aria-pressed="true">
-          <span class="vc-hero__flowlabel" data-i18n="automation-step1">define objectives</span>
-          <span class="vc-hero__flowicon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.4"/><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span>
-          <span class="vc-hero__flowindex">01</span>
+          <span class="vc-hero__flowmeta"><span class="vc-hero__flowindex">01</span><span class="vc-hero__flowicon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m15.4 15.4 4.1 4.1"/></svg></span></span>
+          <span class="vc-hero__flowlabel" data-i18n="automation-step1">Entender</span>
         </button>
         <button class="vc-hero__flowstep" type="button" data-flow-step="1" aria-pressed="false">
-          <span class="vc-hero__flowlabel" data-i18n="automation-step2">map the process</span>
-          <span class="vc-hero__flowicon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><circle cx="19" cy="12" r="2"/><path d="M6.7 11 10.3 7.6M6.7 13 10.3 16.4M13.7 7.6 17.3 11M13.7 16.4 17.3 13"/></svg></span>
-          <span class="vc-hero__flowindex">02</span>
+          <span class="vc-hero__flowmeta"><span class="vc-hero__flowindex">02</span><span class="vc-hero__flowicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.88l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.88-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9v.09a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1Z"/></svg></span></span>
+          <span class="vc-hero__flowlabel" data-i18n="automation-step2">Automatizar</span>
         </button>
         <button class="vc-hero__flowstep" type="button" data-flow-step="2" aria-pressed="false">
-          <span class="vc-hero__flowlabel" data-i18n="automation-step3">integrate tools</span>
-          <span class="vc-hero__flowicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3v4M15 3v4M6 8h12l-.7 5a4.5 4.5 0 0 1-9 0Z"/><path d="M12 17v4"/></svg></span>
-          <span class="vc-hero__flowindex">03</span>
-        </button>
-        <button class="vc-hero__flowstep" type="button" data-flow-step="3" aria-pressed="false">
-          <span class="vc-hero__flowlabel" data-i18n="automation-step4">test and optimize</span>
-          <span class="vc-hero__flowicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4.5 15a7.5 7.5 0 1 1 15 0"/><path d="M12 15 15.2 9.8"/><circle cx="12" cy="15" r="1.3"/></svg></span>
-          <span class="vc-hero__flowindex">04</span>
-        </button>
-        <button class="vc-hero__flowstep" type="button" data-flow-step="4" aria-pressed="false">
-          <span class="vc-hero__flowlabel" data-i18n="automation-step5">document and improve</span>
-          <span class="vc-hero__flowicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3.5h6.5L17 7v13a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V4a.5.5 0 0 1 .5-.5Z"/><path d="M13.3 3.5V7a.5.5 0 0 0 .5.5H17"/><path d="M12 17.5v-5M9.7 14.7 12 12.5l2.3 2.2"/></svg></span>
-          <span class="vc-hero__flowindex">05</span>
+          <span class="vc-hero__flowmeta"><span class="vc-hero__flowindex">03</span><span class="vc-hero__flowicon" aria-hidden="true"><svg class="vc-hero__chart-icon" viewBox="0 0 24 24"><path d="M3 3.5v17h18"/><path class="vc-hero__chart-bars" d="M5.2 15.4h3.1v5.1H5.2zM9.8 11.8h3.1v8.7H9.8zM14.4 14.3h3.1v6.2h-3.1zM19 9.3h2.5v11.2H19z"/><path d="m5.2 13 6-6.5 3.6 3.5 5.9-5.8M17.3 4.2h3.4v3.4"/></svg></span></span>
+          <span class="vc-hero__flowlabel" data-i18n="automation-step3">Melhorar</span>
         </button>
       </div>
-      <div class="vc-hero__livebar"><span class="vc-dot vc-dot--small"></span><span data-i18n="automation-live">etapa selecionada</span><strong id="automationEvent">Defina o resultado esperado e os critérios de sucesso.</strong><span id="automationTime">01 / 05</span></div>
-      <div class="vc-hero__panelnote"><span data-i18n="automation-panel-note">manual effort converted into scalable logic</span></div>
+      <div class="vc-hero__metrics">
+        <div class="vc-hero__metric">
+          <div><span data-i18n="automation-metric-time">TEMPO ECONOMIZADO</span><strong id="automationTimeValue">34,6%</strong></div>
+          <span id="automationTimeBar" class="vc-hero__metric-track" role="progressbar" aria-label="Tempo economizado" aria-valuemin="0" aria-valuemax="100" aria-valuenow="34.6"><i style="width:34.6%"></i></span>
+        </div>
+        <div class="vc-hero__metric">
+          <div><span data-i18n="automation-metric-standard">PADRONIZAÇÃO</span><strong id="automationStandardValue">28,4%</strong></div>
+          <span id="automationStandardBar" class="vc-hero__metric-track" role="progressbar" aria-label="Padronização" aria-valuemin="0" aria-valuemax="100" aria-valuenow="28.4"><i style="width:28.4%"></i></span>
+        </div>
+      </div>
+      <div class="vc-hero__panelnote" data-i18n="automation-demo">INDICADORES ILUSTRATIVOS</div>
     </aside>
   </div>
 

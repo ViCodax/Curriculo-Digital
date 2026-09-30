@@ -19,7 +19,7 @@
 
     panel: {
       pt: {
-        title: "automation engine // online",
+        title: "automation console",
         rows: [
           ["função",   "Analista de Workplace N2"],
           ["projeto",  "Workplace Automation Platform"],
@@ -29,7 +29,7 @@
         ],
       },
       en: {
-        title: "automation engine // online",
+        title: "automation console",
         rows: [
           ["role",      "L2 Workplace Analyst"],
           ["project",   "Workplace Automation Platform"],
@@ -187,19 +187,29 @@
       "nav-contato": "Contato", "nav-pdf": "PDF",
 
       "hero-build": "building profile",
-      "automation-panel-title": "automation engine // online",
-      "automation-step1": "definir objetivos",
-      "automation-step2": "mapear o processo",
-      "automation-step3": "integrar ferramentas",
-      "automation-step4": "testar e otimizar",
-      "automation-step5": "documentar e melhorar",
-      "automation-live": "etapa selecionada",
-      "automation-detail1": "Defina o resultado esperado e os critérios de sucesso.",
-      "automation-detail2": "Mapeie o fluxo atual e identifique pontos de atrito.",
-      "automation-detail3": "Conecte ferramentas e dados ao processo.",
-      "automation-detail4": "Valide cenários e ajuste a solução.",
-      "automation-detail5": "Documente a entrega e identifique a próxima melhoria.",
-      "automation-panel-note": "esforço manual convertido em lógica escalável",
+      "automation-online": "ONLINE",
+      "automation-command1": "process --analyze",
+      "automation-command2": "process --automate",
+      "automation-command3": "process --optimize",
+      "automation-output1-1": "identificando tarefas repetitivas...",
+      "automation-output2-1": "mapeando o processo atual...",
+      "automation-output1-2": "conectando ferramentas e dados...",
+      "automation-output2-2": "aplicando scripts, RPA e IA...",
+      "automation-output1-3": "medindo resultados da automação...",
+      "automation-output2-3": "refinando o fluxo de trabalho...",
+      "automation-flow-title": "FLUXO DE AUTOMAÇÃO",
+      "automation-step1": "Entender",
+      "automation-step2": "Automatizar",
+      "automation-step3": "Melhorar",
+      "automation-detail1": "Mapear o processo e identificar tarefas repetitivas.",
+      "automation-detail2": "Aplicar scripts, RPA, APIs e IA na rotina.",
+      "automation-detail3": "Medir o ganho e transformar o fluxo em padrão.",
+      "automation-status1": "fluxo analisado",
+      "automation-status2": "automação aplicada",
+      "automation-status3": "processo otimizado",
+      "automation-metric-time": "TEMPO ECONOMIZADO",
+      "automation-metric-standard": "PADRONIZAÇÃO",
+      "automation-demo": "INDICADORES ILUSTRATIVOS",
       "chip-1": "Analista de Workplace N2",
       "chip-2": "Automação de Processos",
       "chip-6": "Melhoria Contínua",
@@ -305,19 +315,29 @@
       "nav-contato": "Contact", "nav-pdf": "PDF",
 
       "hero-build": "building profile",
-      "automation-panel-title": "automation engine // online",
-      "automation-step1": "define objectives",
-      "automation-step2": "map the process",
-      "automation-step3": "integrate tools",
-      "automation-step4": "test and optimize",
-      "automation-step5": "document and improve",
-      "automation-live": "selected stage",
-      "automation-detail1": "Define the expected outcome and success criteria.",
-      "automation-detail2": "Map the current workflow and identify friction points.",
-      "automation-detail3": "Connect tools and data to the process.",
-      "automation-detail4": "Validate scenarios and refine the solution.",
-      "automation-detail5": "Document the delivery and identify the next improvement.",
-      "automation-panel-note": "manual effort converted into scalable logic",
+      "automation-online": "ONLINE",
+      "automation-command1": "process --analyze",
+      "automation-command2": "process --automate",
+      "automation-command3": "process --optimize",
+      "automation-output1-1": "identifying repetitive tasks...",
+      "automation-output2-1": "mapping the current process...",
+      "automation-output1-2": "connecting tools and data...",
+      "automation-output2-2": "applying scripts, RPA, and AI...",
+      "automation-output1-3": "measuring automation results...",
+      "automation-output2-3": "refining the workflow...",
+      "automation-flow-title": "AUTOMATION FLOW",
+      "automation-step1": "Understand",
+      "automation-step2": "Automate",
+      "automation-step3": "Improve",
+      "automation-detail1": "Map the process and identify repetitive tasks.",
+      "automation-detail2": "Apply scripts, RPA, APIs, or AI to the workflow.",
+      "automation-detail3": "Measure the gain and standardize the process.",
+      "automation-status1": "workflow analyzed",
+      "automation-status2": "automation applied",
+      "automation-status3": "process optimized",
+      "automation-metric-time": "TIME SAVED",
+      "automation-metric-standard": "STANDARDIZATION",
+      "automation-demo": "ILLUSTRATIVE INDICATORS",
       "chip-1": "L2 Workplace Analyst",
       "chip-2": "Process Automation",
       "chip-6": "Continuous Improvement",
@@ -429,6 +449,10 @@
   let isFeedPaused = false;
   let feedIntervalMs = CONFIG.feedSpeed;
   let automationTimer = null;
+  let automationTypingTimer = null;
+  let automationTypingToken = 0;
+  let automationMetricFrame = null;
+  let automationMetricToken = 0;
   let skillMode = "hard";
   let skillObserver = null;
 
@@ -575,30 +599,90 @@
     const card = $(".vc-hero__panel");
     if (!card) return;
     const cfg = CONFIG.panel[lang];
-    const head = $(".vc-hero__panelhead", card);
-    if (head) head.querySelector("span:last-child").textContent = cfg.title;
+    const title = $("#automationPanelTitle", card);
+    if (title) title.textContent = cfg.title;
   }
 
   function initAutomationPanel() {
-    const steps = $$("[data-flow-step]"), event = $("#automationEvent"), timer = $("#automationTime"), line = $(".vc-hero__workflow-line i");
+    const steps = $$("[data-flow-step]"), event = $("#automationEvent"), timer = $("#automationTime");
+    const command = $("#automationCommand"), output1 = $("#automationOutput1"), output2 = $("#automationOutput2");
+    const metricTargets = [[34.6, 28.4], [68.7, 62.3], [92.4, 87.9]];
+    const metrics = [
+      [$("#automationTimeValue"), $("#automationTimeBar")],
+      [$("#automationStandardValue"), $("#automationStandardBar")],
+    ];
     if (!steps.length) return;
     clearInterval(automationTimer);
     let current = Number(steps.find((step) => step.classList.contains("is-active"))?.dataset.flowStep || 0);
+    const updateMetrics = (stepIndex) => {
+      if (automationMetricFrame !== null) cancelAnimationFrame(automationMetricFrame);
+      const token = ++automationMetricToken;
+      const targets = metricTargets[stepIndex];
+      const starts = metrics.map(([value]) => Number.parseFloat(value.textContent.replace(",", ".")) || 0);
+      metrics.forEach(([, bar]) => {
+        const field = bar.closest(".vc-hero__metric");
+        field.classList.remove("is-improving");
+        if (stepIndex === 2 && !reduced) {
+          void field.offsetWidth;
+          field.classList.add("is-improving");
+        }
+      });
+      const render = (progress) => metrics.forEach(([value, bar], index) => {
+        const currentValue = starts[index] + (targets[index] - starts[index]) * progress;
+        value.textContent = `${currentValue.toLocaleString(lang === "pt" ? "pt-BR" : "en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`;
+        bar.setAttribute("aria-valuenow", currentValue.toFixed(1));
+        $("i", bar).style.width = `${currentValue}%`;
+      });
+      if (reduced) { render(1); return; }
+
+      const startTime = performance.now(), duration = 900;
+      const tick = (now) => {
+        if (token !== automationMetricToken) return;
+        const progress = Math.min((now - startTime) / duration, 1);
+        render(1 - (1 - progress) ** 3);
+        if (progress < 1) automationMetricFrame = requestAnimationFrame(tick);
+        else automationMetricFrame = null;
+      };
+      automationMetricFrame = requestAnimationFrame(tick);
+    };
     const selectStep = (selectedIndex) => {
-      const isReset = selectedIndex === 0 && current !== 0;
       current = selectedIndex;
-      if (isReset && line) line.classList.add("is-resetting");
       steps.forEach((step, index) => {
         step.classList.toggle("is-active", index === current);
         step.classList.toggle("is-done", index < current);
         step.setAttribute("aria-pressed", String(index === current));
       });
-      if (line) {
-        line.style.left = (current / (steps.length - 1)) * 100 + "%";
-        if (isReset) requestAnimationFrame(() => line.classList.remove("is-resetting"));
+      const stage = current + 1;
+      if (automationTypingTimer) clearTimeout(automationTypingTimer);
+      const token = ++automationTypingToken;
+      const lines = [
+        [command, I18N[lang][`automation-command${stage}`]],
+        [output1, I18N[lang][`automation-output1-${stage}`]],
+        [output2, I18N[lang][`automation-output2-${stage}`]],
+        [event, I18N[lang][`automation-status${stage}`]],
+      ].filter(([element]) => element);
+      lines.forEach(([element]) => { element.textContent = ""; });
+      if (reduced) {
+        lines.forEach(([element, text]) => { element.textContent = text; });
+      } else {
+        let lineIndex = 0, charIndex = 0;
+        const typeNextCharacter = () => {
+          if (token !== automationTypingToken) return;
+          const [element, text] = lines[lineIndex];
+          element.textContent = text.slice(0, ++charIndex);
+          if (charIndex >= text.length) {
+            lineIndex++;
+            charIndex = 0;
+            if (lineIndex >= lines.length) return;
+            automationTypingTimer = setTimeout(typeNextCharacter, 110);
+            return;
+          }
+          automationTypingTimer = setTimeout(typeNextCharacter, 18);
+        };
+        if (lines.length) typeNextCharacter();
       }
-      if (event) event.textContent = I18N[lang][`automation-detail${current + 1}`];
       if (timer) timer.textContent = `${String(current + 1).padStart(2, "0")} / ${String(steps.length).padStart(2, "0")}`;
+      updateMetrics(current);
     };
     steps.forEach((step) => {
       if (step.dataset.interactive === "true") return;
